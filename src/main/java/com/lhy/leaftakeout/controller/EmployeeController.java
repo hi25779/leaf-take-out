@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 
 /**
  * @author : Jesse(lhy)
@@ -48,12 +49,27 @@ public class EmployeeController {
             return R.error("User is forbidden");
         }
 
+        httpServletRequest.getSession().setAttribute("employee", obj.getId());
         return R.success(obj);
     }
 
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest httpServletRequest) {
+        httpServletRequest.getSession().removeAttribute("employee");
         return R.success("Logout successful");
+    }
+
+    @PostMapping
+    public R<String> addEmployee(HttpServletRequest httpServletRequest, @RequestBody Employee employee) {
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+        employee.setCreateUser((Long) httpServletRequest.getSession().getAttribute("employee"));
+        employee.setUpdateUser((Long) httpServletRequest.getSession().getAttribute("employee"));
+
+
+        employeeService.save(employee);
+        return R.success("Add user successfully");
     }
 
 }
