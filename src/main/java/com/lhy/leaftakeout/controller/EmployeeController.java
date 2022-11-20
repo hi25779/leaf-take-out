@@ -40,7 +40,7 @@ public class EmployeeController {
 
         password = DigestUtils.md5DigestAsHex(password.getBytes());
 
-        if (password.equals(obj.getPassword())) {
+        if (!password.equals(obj.getPassword())) {
             return R.error("Password is error");
         }
 
@@ -49,7 +49,11 @@ public class EmployeeController {
         }
 
         return R.success(obj);
+    }
 
+    @PostMapping("/logout")
+    public R<String> logout(HttpServletRequest httpServletRequest) {
+        return R.success("Logout successful");
     }
 
 }
