@@ -9,6 +9,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -38,10 +39,11 @@ public class LoginCheckFilter implements Filter {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
-
+        HttpSession session = httpServletRequest.getSession();
         if (httpServletRequest.getSession().getAttribute("employee") != null) {
             log.info("User already login, username is: {}", httpServletRequest.getSession().getAttribute("employee"));
             filterChain.doFilter(httpServletRequest, httpServletResponse);
+            return;
         }
 
         log.info("User not login");

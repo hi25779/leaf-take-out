@@ -67,7 +67,6 @@ public class EmployeeController {
         employee.setCreateUser((Long) httpServletRequest.getSession().getAttribute("employee"));
         employee.setUpdateUser((Long) httpServletRequest.getSession().getAttribute("employee"));
 
-
         employeeService.save(employee);
         return R.success("Add user successfully");
     }
