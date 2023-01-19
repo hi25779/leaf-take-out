@@ -63,8 +63,8 @@ public class EmployeeController {
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
-        employee.setCreateUser((Long) httpServletRequest.getSession().getAttribute("employee"));
-        employee.setUpdateUser((Long) httpServletRequest.getSession().getAttribute("employee"));
+        employee.setCreateUser(Long.parseLong((String) httpServletRequest.getSession().getAttribute("employee")));
+        employee.setUpdateUser(Long.parseLong((String) httpServletRequest.getSession().getAttribute("employee")));
 
         employeeService.save(employee);
         return R.success("Add user successfully");
@@ -86,4 +86,18 @@ public class EmployeeController {
         return R.success(pageInfo);
     }
 
+    @PutMapping
+    public R<String> update(HttpServletRequest httpServletRequest, @RequestBody Employee employee) {
+        log.info("********************&&&&&&&&&&" + (String) httpServletRequest.getSession().getAttribute("employee"));
+        employee.setUpdateUser(Long.parseLong((String) httpServletRequest.getSession().getAttribute("employee")));
+        employee.setUpdateTime(LocalDateTime.now());
+        employeeService.updateById(employee);
+        return R.success("update successfully");
+    }
+
+    @GetMapping("/{id}")
+    public R<Employee> getEmployee(@PathVariable Long id) {
+        Employee employee = employeeService.getById(id);
+        return R.success(employee);
+    }
 }
